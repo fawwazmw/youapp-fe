@@ -134,7 +134,7 @@ export default function ProfilePage() {
   }, [birthday]);
 
   return (
-    <main className="min-h-screen flex flex-col p-4 sm:p-8 text-white relative">
+    <main className="min-h-screen flex flex-col p-4 sm:p-8 text-white relative overflow-x-hidden overflow-y-auto">
       {/* Top Navigation - Positioned absolute so it doesn't affect centering */}
       <div className="absolute top-8 left-4 sm:left-8 w-full pr-8 sm:pr-16 flex justify-between items-center z-10">
         <Link href="/" className="flex items-center gap-1 text-white hover:text-white/80 transition-colors">
