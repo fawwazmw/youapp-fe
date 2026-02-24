@@ -147,6 +147,11 @@ export default function ProfilePage() {
     }
   }, [birthday]);
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/login');
+  };
+
   return (
     <main className="min-h-screen flex flex-col p-4 sm:p-8 text-white relative overflow-x-hidden overflow-y-auto">
       {/* Top Navigation - Positioned absolute so it doesn't affect centering */}
@@ -156,6 +161,12 @@ export default function ProfilePage() {
           <span className="font-bold text-base">Back</span>
         </Link>
         <span className="font-semibold text-lg pr-4 sm:pr-8 mx-auto">@{displayName || username || '...'}</span>
+        <button 
+          onClick={handleLogout}
+          className="text-[13px] font-bold bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors"
+        >
+          Logout
+        </button>
       </div>
       
       {/* Centered Content Container */}
@@ -199,19 +210,27 @@ export default function ProfilePage() {
             <h2 className="font-bold text-[14px]">About</h2>
             
             {isEditingAbout ? (
-              <button 
-                onClick={handleSaveAbout}
-                className="font-bold text-[13px] hover:opacity-80 transition-opacity"
-                style={{ 
-                  background: 'linear-gradient(90deg, #94783E 0%, #F3EDA6 16.67%, #F8FAE5 33.33%, #FFE2BE 50%, #D5BE88 66.67%, #F8FAE5 83.33%, #D5BE88 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  color: 'transparent'
-                }}
-              >
-                Save & Update
-              </button>
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setIsEditingAbout(false)}
+                  className="font-bold text-[13px] text-white/50 hover:text-white/80 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleSaveAbout}
+                  className="font-bold text-[13px] hover:opacity-80 transition-opacity"
+                  style={{ 
+                    background: 'linear-gradient(90deg, #94783E 0%, #F3EDA6 16.67%, #F8FAE5 33.33%, #FFE2BE 50%, #D5BE88 66.67%, #F8FAE5 83.33%, #D5BE88 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: 'transparent'
+                  }}
+                >
+                  Save & Update
+                </button>
+              </div>
             ) : (
               <button 
                 onClick={() => setIsEditingAbout(true)}
