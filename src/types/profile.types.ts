@@ -5,6 +5,7 @@ export interface Profile {
   weight?: number;
   interests?: string[];
   username?: string;
+  profileImage?: string;
 }
 
 export interface UpdateProfileDto {
@@ -13,4 +14,5 @@ export interface UpdateProfileDto {
   height?: number;
   weight?: number;
   interests?: string[];
+  profileImage?: string;
 }

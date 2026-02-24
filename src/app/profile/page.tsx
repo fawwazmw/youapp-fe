@@ -25,6 +25,7 @@ export default function ProfilePage() {
   const [zodiac, setZodiac] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [interests, setInterests] = useState<string[]>([]);
   const [isAboutEmpty, setIsAboutEmpty] = useState(true);
   const [hasProfile, setHasProfile] = useState(false); // Track if profile exists on backend
@@ -69,6 +70,7 @@ export default function ProfilePage() {
         }
         if (p?.height) setHeight(p.height?.toString() || '');
         if (p?.weight) setWeight(p.weight?.toString() || '');
+        if (p?.profileImage) setProfileImage(p.profileImage);
         if (p?.interests) setInterests(p.interests);
 
         if (p?.displayName || p?.gender || p?.birthday || p?.height || p?.weight) {
@@ -95,6 +97,7 @@ export default function ProfilePage() {
         birthday,
         height: height ? Number(height) : undefined,
         weight: weight ? Number(weight) : undefined,
+        profileImage: profileImage || undefined,
       };
 
       if (hasProfile) {
@@ -113,6 +116,17 @@ export default function ProfilePage() {
     } catch (err) {
       console.error('Failed to save profile', err);
       // Optional: Add error toast or state here
+    }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -149,7 +163,9 @@ export default function ProfilePage() {
         
         {/* Header Profile Image Box */}
         <div className="relative w-full h-[190px] rounded-[16px] bg-[#162329] overflow-hidden">
-          {/* User would put image here, but for now just the dark background */}
+          {profileImage && (
+            <img src={profileImage} alt="Profile Cover" className="absolute inset-0 w-full h-full object-cover opacity-80" />
+          )}
           
           {/* Bottom Info Layer */}
           <div className="absolute bottom-4 left-4 flex flex-col gap-2">
@@ -210,24 +226,34 @@ export default function ProfilePage() {
             <div className="flex flex-col gap-5 pt-2">
               {/* Add Image Section */}
               <div className="flex items-center gap-4 mb-2">
-                <button className="w-[57px] h-[57px] bg-white/[0.08] rounded-[17px] flex items-center justify-center hover:bg-white/[0.12] transition-colors overflow-hidden relative">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <defs>
-                        <linearGradient id="gold-gradient" x1="0%" y1="50%" x2="100%" y2="50%">
-                          <stop offset="0%" stopColor="#94783E" />
-                          <stop offset="16.67%" stopColor="#F3EDA6" />
-                          <stop offset="33.33%" stopColor="#F8FAE5" />
-                          <stop offset="50%" stopColor="#FFE2BE" />
-                          <stop offset="66.67%" stopColor="#D5BE88" />
-                          <stop offset="83.33%" stopColor="#F8FAE5" />
-                          <stop offset="100%" stopColor="#D5BE88" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M12 5V19M5 12H19" stroke="url(#gold-gradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                </button>
+                <label className="w-[57px] h-[57px] bg-white/[0.08] rounded-[17px] flex items-center justify-center hover:bg-white/[0.12] transition-colors overflow-hidden relative cursor-pointer">
+                  {profileImage ? (
+                    <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <linearGradient id="gold-gradient" x1="0%" y1="50%" x2="100%" y2="50%">
+                            <stop offset="0%" stopColor="#94783E" />
+                            <stop offset="16.67%" stopColor="#F3EDA6" />
+                            <stop offset="33.33%" stopColor="#F8FAE5" />
+                            <stop offset="50%" stopColor="#FFE2BE" />
+                            <stop offset="66.67%" stopColor="#D5BE88" />
+                            <stop offset="83.33%" stopColor="#F8FAE5" />
+                            <stop offset="100%" stopColor="#D5BE88" />
+                          </linearGradient>
+                        </defs>
+                        <path d="M12 5V19M5 12H19" stroke="url(#gold-gradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  )}
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    onChange={handleImageUpload} 
+                  />
+                </label>
                 <span className="text-[13px] text-white">Add image</span>
               </div>
               
